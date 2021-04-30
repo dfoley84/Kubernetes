@@ -1,0 +1,54 @@
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: horizoniplist-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+    nginx.org/proxy-connect-timeout: 120s
+    nginx.ingress.kubernetes.io/affinity: cookie
+spec:
+  rules:
+  - host: 
+    http:
+      paths:
+      - path:
+        backend:
+          serviceName: horizoniplist-service
+          servicePort: 80
+  tls:
+  - hosts:
+    -
+    secretName: flaskvci
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: horizoniplist-service
+spec:
+  ports:
+  - name: app-port
+    port: 80
+    targetPort: 5000
+  selector:
+    app: horizoniplist-vci
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: horizoniplist-vci
+  labels:
+    app: horizoniplist-vci
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: horizoniplist-vci
+    spec:
+      containers:
+      - name: 
+        image: prom/prometheus:lts
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+    

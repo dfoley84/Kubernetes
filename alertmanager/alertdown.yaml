@@ -1,0 +1,11 @@
+groups:
+- name: Jenkins-Slaves
+  rules:
+  - alert: LinuxServerDown 
+    expr: up{job="Jenkins-Slaves"} == 0
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: Jenkins Node Server Down
+

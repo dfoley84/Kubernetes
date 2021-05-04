@@ -1,0 +1,17 @@
+kind: ConfigMap
+metadata:
+  name: alertmanager
+  namespace: grafana
+apiVersion: v1
+data:
+  alertmanager.yml: |-
+   route:
+     group_by:[Alertname]
+     receiver: email-me
+   receivers:
+   - name: email-me
+     email_configs:
+     - to: 
+       from: 
+       smarthost: 
+

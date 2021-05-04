@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "8"
+    field.cattle.io/publicEndpoints: '[{"addresses":["10.49.58.29"],"port":443,"protocol":"HTTPS","serviceName":"grafana:grafana-service","ingressName":"grafana:grafana-ingress","hostname":"grafana-vci.lvprd.oks.drekar.qualcomm.com","allNodes":true}]'
+    kubectl.kubernetes.io/last-applied-configuration: '{"apiVersion":"extensions/v1beta1","kind":"Deployment","metadata":{"annotations":{},"name":"grafana-vci","namespace":"grafana"},"spec":{"replicas":1,"template":{"metadata":{"labels":{"app":"grafana-vci"}},"spec":{"containers":[{"image":"docker-registry.qualcomm.com/dfoley/grafana","imagePullPolicy":"Always","name":"grafana-vci","ports":[{"containerPort":3000}]}],"dnsConfig":{"searches":["qualcomm.com"]},"imagePullSecrets":[{"name":null}]}}}}'
+  creationTimestamp: "2020-05-26T14:36:05Z"
+  generation: 15
+  labels:
+    app: grafana-vci
+  name: grafana-vci
+  namespace: grafana
+  resourceVersion: "161613588"
+  selfLink: /apis/apps/v1beta2/namespaces/grafana/deployments/grafana-vci
+  uid: 14a3cad1-f311-476d-be01-369ea18d51cf
+spec:
+  progressDeadlineSeconds: 2147483647
+  replicas: 1
+  revisionHistoryLimit: 2147483647
+  selector:
+    matchLabels:
+      app: grafana-vci
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        cattle.io/timestamp: "2020-05-28T14:00:21Z"
+        field.cattle.io/ports: '[[{"containerPort":3000,"dnsName":"grafana-vci-","name":"3000tcp00","protocol":"TCP","sourcePort":0}]]'
+      creationTimestamp: null
+      labels:
+        app: grafana-vci
+    spec:
+      containers:
+      - image: docker-registry.qualcomm.com/dfoley/grafana
+        imagePullPolicy: Always
+        name: grafana-vci
+        ports:
+        - containerPort: 3000
+          name: 3000tcp00
+          protocol: TCP
+        resources: {}
+        securityContext:
+          capabilities: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/lib/grafana
+          name: grafana-storage
+        - mountPath: /etc/grafana/provisioning/datasources
+          name: grafana-datasources-config
+        - mountPath: /etc/grafana/
+          name: grafana-config-stroage-config
+      dnsConfig:
+        searches:
+        - qualcomm.com
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - {}
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: grafana-storage
+        persistentVolumeClaim:
+          claimName: grafana-storage
+      - configMap:
+          defaultMode: 420
+          name: grafana-datasources
+          optional: false
+        name: grafana-datasources-config
+      - configMap:
+          defaultMode: 420
+          name: grafana-config
+          optional: false
+        name: grafana-config-stroage-config
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2020-05-26T14:36:05Z"
+    lastUpdateTime: "2020-05-26T14:36:05Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  observedGeneration: 15
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

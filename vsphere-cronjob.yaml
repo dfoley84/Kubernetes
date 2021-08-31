@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: VMC_VirtualMachine
+spec:
+  schedule: "0 */2 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: VMC_VirtualMachine
+              image: vsphere_ubuntu
+              imagePullPolicy: "IfNotPresent"
+              env:
+                - name: sc_username
+                  valueFrom:
+                    secretKeyRef:
+                      name: vsphere_sc
+                      key: username
+                - name: sc_password
+                    valueFrom:
+                      secretKeyRef:
+                        name: vsphere_sc
+                        key: password
+              command: ["python3", "/srv/pythonscripts/ESXi_DataStore.py"]
+          volumeMounts:
+            - mountPath: /srv/pythonscripts
+              name: python_code
+          restartPolicy: OnFailure
